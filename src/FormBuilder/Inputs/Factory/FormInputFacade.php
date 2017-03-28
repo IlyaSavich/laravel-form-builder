@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FormBuilder\Inputs\Factory;
+namespace Savich\FormBuilder\Inputs\Factory;
 
 use Illuminate\Support\Facades\Facade;
 

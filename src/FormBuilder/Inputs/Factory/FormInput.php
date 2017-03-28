@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FormBuilder\Inputs\Factory;
+namespace Savich\FormBuilder\Inputs\Factory;
 
 use App\Services\FormBuilder\Inputs\ButtonInput;
 use App\Services\FormBuilder\Inputs\CheckboxInput;

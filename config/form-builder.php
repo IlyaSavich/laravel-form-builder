@@ -2,8 +2,8 @@
 
 return [
     'views' => [
-        'input' => 'input',
-        'form' => 'form',
-        'without-group-input' => 'without-group-input',
+        'input' => 'form-builder::input',
+        'form' => 'form-builder::form',
+        'without-group-input' => 'form-builder::without-group-input',
     ],
 ];

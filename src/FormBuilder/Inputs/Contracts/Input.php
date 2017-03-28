@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Services\FormBuilder\Inputs\Contracts;
+namespace Savich\FormBuilder\Inputs\Contracts;
 
-use Collective\Html\FormBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\View;
 

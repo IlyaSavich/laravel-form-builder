@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FormBuilder\Inputs\Contracts;
+namespace Savich\FormBuilder\Inputs\Contracts;
 
 use Illuminate\Contracts\View\View;
 

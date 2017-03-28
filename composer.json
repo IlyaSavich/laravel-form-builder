@@ -13,8 +13,10 @@
       "Savich\\": "src/"
     }
   },
-  "minimum-stability": "dev",
   "require": {
-    "laravelcollective/html": "~5.0"
+    "laravel/framework": "^5.3"
+  },
+  "require-dev": {
+    "phpspec/prophecy": "~1.0"
   }
 }

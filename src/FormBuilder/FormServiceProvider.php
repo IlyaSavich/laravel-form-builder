@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FormBuilder;
+namespace Savich\FormBuilder;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -28,8 +28,29 @@ class FormServiceProvider extends ServiceProvider
             $form->initializeRequest($app['request'], $app);
         });
 
+        $this->loadViewsFrom(__DIR__ . '/../../views', 'form-builder');
+
+        $this->publishConfig();
+        $this->publishViews();
+    }
+
+    /**
+     * Specify publish config file
+     */
+    protected function publishConfig()
+    {
         $this->publishes([
-            __DIR__ . '/../../config/laravel-filter.php' => config_path('laravel-filter.php'),
+            __DIR__ . '/../../config/form-builder.php' => config_path('form-builder.php'),
         ], 'config');
+    }
+
+    /**
+     * Specify publish view files
+     */
+    protected function publishViews()
+    {
+        $this->publishes([
+            __DIR__ . '/../../views' => resource_path('views/vendor/form-builder'),
+        ], 'views');
     }
 }

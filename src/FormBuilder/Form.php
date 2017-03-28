@@ -46,7 +46,7 @@ abstract class Form
      * Available types for get() method
      * @var array
      */
-    protected $types;
+    protected $types = ['create', 'edit'];
 
     /**
      * Type for current form generation
@@ -66,10 +66,15 @@ abstract class Form
      */
     protected $routes = [];
 
+    /**
+     * Form method mapping on form type
+     * @var array
+     */
+    protected $methods = ['create' => 'POST', 'edit' => 'PUT'];
+
     public function __construct(FormBuilder $builder = null)
     {
         $this->builder = $builder ?? app(FormBuilder::class);
-        $this->types = $this->defaultTypes();
     }
 
     /**
@@ -90,46 +95,9 @@ abstract class Form
 
         $this->builder->model($this->model);
         $this->make($this->builder);
-
         $this->formAttributes($this->builder);
 
         return $this->builder->get();
-    }
-
-    /**
-     * Initialize the form request with data from the given request.
-     * @param Request $current
-     * @param Container $app
-     */
-    public function initializeRequest(Request $current, Container $app)
-    {
-        $requestMethod = $current->getMethod();
-        /* @var Request|FormRequest $form */
-        $this->request = $app->make($this->requests[$requestMethod] ?? Request::class);
-
-        $files = $current->files->all();
-
-        $files = is_array($files) ? array_filter($files) : $files;
-
-        $this->request->initialize(
-            $current->query->all(), $current->request->all(), $current->attributes->all(),
-            $current->cookies->all(), $files, $current->server->all(), $current->getContent()
-        );
-
-        $this->request->setJson($current->json());
-
-        if ($session = $current->getSession()) {
-            /* @var Session $session */
-            $this->request->setLaravelSession($session);
-        }
-
-        $this->request->setUserResolver($current->getUserResolver());
-
-        $this->request->setRouteResolver($current->getRouteResolver());
-
-        if (is_a($this->request, FormRequest::class)) {
-            $this->request->setContainer($app)->setRedirector($app->make(Redirector::class));
-        }
     }
 
     /**
@@ -170,13 +138,77 @@ abstract class Form
     }
 
     /**
+     * Get method for type
+     * @return string
+     */
+    public function method()
+    {
+        return $this->methods[$this->type] ?? null;
+    }
+
+    /**
+     * Get model or it property
+     * @param string $property
+     * @return Model|mixed
+     */
+    public function model($property = null)
+    {
+        if (!$this->model) {
+            return null;
+        }
+
+        if (!$property) {
+            return $this->model;
+        }
+
+        return $this->model->$property;
+    }
+
+    /**
+     * Initialize the form request with data from the given request.
+     * @param Request $current
+     * @param Container $app
+     */
+    public function initializeRequest(Request $current, Container $app)
+    {
+        $requestMethod = $current->getMethod();
+        /* @var Request|FormRequest $form */
+        $this->request = $app->make($this->requests[$requestMethod] ?? Request::class);
+
+        $files = $current->files->all();
+
+        $files = is_array($files) ? array_filter($files) : $files;
+
+        $this->request->initialize(
+            $current->query->all(), $current->request->all(), $current->attributes->all(),
+            $current->cookies->all(), $files, $current->server->all(), $current->getContent()
+        );
+
+        $this->request->setJson($current->json());
+
+        if ($session = $current->getSession()) {
+            /* @var Session $session */
+            $this->request->setLaravelSession($session);
+        }
+
+        $this->request->setUserResolver($current->getUserResolver());
+
+        $this->request->setRouteResolver($current->getRouteResolver());
+
+        if (is_a($this->request, FormRequest::class)) {
+            $this->request->setContainer($app)->setRedirector($app->make(Redirector::class));
+        }
+    }
+
+    /**
      * Apply some changes for form attributes. Check routes
      * @param FormBuilder $builder
      * @return Form
      */
     protected function formAttributes(FormBuilder $builder)
     {
-        return $this->checkRoutes($builder);
+        return $this->checkRoutes($builder)
+            ->checkMethod($builder);
     }
 
     /**
@@ -189,22 +221,26 @@ abstract class Form
         $route = $builder->attribute('route');
 
         if (!$route) {
-            $builder->attribute('route', $this->route($this->model->id));
+            $builder->attribute('route', $this->route($this->model ? $this->model('id') : null));
         }
 
         return $this;
     }
 
     /**
-     * Get default types for get method
-     * @return array
+     * Check route. Set route
+     * @param FormBuilder $builder
+     * @return static
      */
-    protected function defaultTypes()
+    protected function checkMethod(FormBuilder $builder)
     {
-        return [
-            'create',
-            'edit',
-        ];
+        $method = $builder->attribute('method');
+
+        if (!$method) {
+            $builder->attribute('method', $this->method());
+        }
+
+        return $this;
     }
 
     /**

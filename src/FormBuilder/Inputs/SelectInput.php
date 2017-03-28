@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\FormBuilder\Inputs;
+namespace Savich\FormBuilder\Inputs;
 
-use App\Services\FormBuilder\Inputs\Contracts\SelectableInput;
+use Savich\FormBuilder\Inputs\Contracts\SelectableInput;
 
 class SelectInput extends SelectableInput
 {
