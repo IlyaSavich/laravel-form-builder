@@ -29,7 +29,7 @@ class FormInput
      */
     public function validate(string $namespace) : string
     {
-        if (!$namespace instanceof Input::class) {
+        if (!is_subclass_of($namespace, Input::class)) {
             throw new \Exception($namespace . ' must be inheritor of ' . Input::class);
         }
 
