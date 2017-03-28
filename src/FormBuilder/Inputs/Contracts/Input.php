@@ -25,34 +25,6 @@ use Illuminate\View\View;
  */
 abstract class Input implements Inputable
 {
-    public static $availableTypes = [
-        'button',
-        'checkbox',
-        'color',
-        'date',
-        'datetime',
-        'datetime-local',
-        'email',
-        'file',
-        'hidden',
-        'image',
-        'month',
-        'number',
-        'password',
-        'radio',
-        'range',
-        'reset',
-        'search',
-        'select',
-        'submit',
-        'tel',
-        'textarea',
-        'text',
-        'time',
-        'url',
-        'week',
-    ];
-
     /**
      * @var string
      */
@@ -135,10 +107,6 @@ abstract class Input implements Inputable
      */
     public function __construct(string $name, $value = null, $attributes = [])
     {
-        if (!$this->validType()) {
-            throw new \Exception('Type `' . $this->type() . '` is not supported');
-        }
-
         $this->name = $name;
         $this->value = $value;
         $this->attributes = $attributes;
@@ -159,6 +127,7 @@ abstract class Input implements Inputable
                 $instanceType = is_object($input) ? get_class($input) : gettype($input);
                 throw new \Exception('Expected instance of ' . self::class . '. Got ' . $instanceType);
             }
+
             /** @var Input $input */
             return $html . $input->generate();
         });
@@ -361,15 +330,6 @@ abstract class Input implements Inputable
         return [
             'class' => 'form-group',
         ];
-    }
-
-    /**
-     * Check that specified type is supported
-     * @return bool
-     */
-    protected function validType() : bool
-    {
-        return in_array($this->type(), static::$availableTypes);
     }
 
     /**

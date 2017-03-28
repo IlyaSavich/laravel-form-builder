@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FormBuilder;
+namespace Savich\FormBuilder;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Session\Session;

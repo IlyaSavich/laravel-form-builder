@@ -1,61 +1,36 @@
 <?php
 
-namespace App\Services\FormBuilder;
+namespace Savich\FormBuilder;
 
-use App\Services\FormBuilder\Inputs\ButtonInput;
-use App\Services\FormBuilder\Inputs\CheckboxInput;
-use App\Services\FormBuilder\Inputs\ColorInput;
-use App\Services\FormBuilder\Inputs\Contracts\Input;
-use App\Services\FormBuilder\Inputs\DateInput;
-use App\Services\FormBuilder\Inputs\DatetimeInput;
-use App\Services\FormBuilder\Inputs\DatetimeLocalInput;
-use App\Services\FormBuilder\Inputs\EmailInput;
-use App\Services\FormBuilder\Inputs\FileInput;
-use App\Services\FormBuilder\Inputs\HiddenInput;
-use App\Services\FormBuilder\Inputs\ImageInput;
-use App\Services\FormBuilder\Inputs\MonthInput;
-use App\Services\FormBuilder\Inputs\NumberInput;
-use App\Services\FormBuilder\Inputs\PasswordInput;
-use App\Services\FormBuilder\Inputs\RadioInput;
-use App\Services\FormBuilder\Inputs\RangeInput;
-use App\Services\FormBuilder\Inputs\ResetInput;
-use App\Services\FormBuilder\Inputs\SearchInput;
-use App\Services\FormBuilder\Inputs\SelectInput;
-use App\Services\FormBuilder\Inputs\SubmitInput;
-use App\Services\FormBuilder\Inputs\TelephoneInput;
-use App\Services\FormBuilder\Inputs\TextareaInput;
-use App\Services\FormBuilder\Inputs\TextInput;
-use App\Services\FormBuilder\Inputs\TimeInput;
-use App\Services\FormBuilder\Inputs\UrlInput;
-use App\Services\FormBuilder\Inputs\WeekInput;
+use Savich\FormBuilder\Inputs\ButtonInput;
+use Savich\FormBuilder\Inputs\CheckboxInput;
+use Savich\FormBuilder\Inputs\ColorInput;
+use Savich\FormBuilder\Inputs\Contracts\Input;
+use Savich\FormBuilder\Inputs\DateInput;
+use Savich\FormBuilder\Inputs\DatetimeInput;
+use Savich\FormBuilder\Inputs\DatetimeLocalInput;
+use Savich\FormBuilder\Inputs\EmailInput;
+use Savich\FormBuilder\Inputs\FileInput;
+use Savich\FormBuilder\Inputs\HiddenInput;
+use Savich\FormBuilder\Inputs\ImageInput;
+use Savich\FormBuilder\Inputs\MonthInput;
+use Savich\FormBuilder\Inputs\NumberInput;
+use Savich\FormBuilder\Inputs\PasswordInput;
+use Savich\FormBuilder\Inputs\RadioInput;
+use Savich\FormBuilder\Inputs\RangeInput;
+use Savich\FormBuilder\Inputs\ResetInput;
+use Savich\FormBuilder\Inputs\SearchInput;
+use Savich\FormBuilder\Inputs\SelectInput;
+use Savich\FormBuilder\Inputs\SubmitInput;
+use Savich\FormBuilder\Inputs\TelephoneInput;
+use Savich\FormBuilder\Inputs\TextareaInput;
+use Savich\FormBuilder\Inputs\TextInput;
+use Savich\FormBuilder\Inputs\TimeInput;
+use Savich\FormBuilder\Inputs\UrlInput;
+use Savich\FormBuilder\Inputs\WeekInput;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
-use Prophecy\Exception\Doubler\MethodNotFoundException;
 
-/**
- * Class FormBuilder
- * @package App\Services\FormBuilder
- *
- * @method CheckboxInput checkbox($name, $value = null, array $options = [])
- * @method ColorInput color($name, $value = null, array $options = [])
- * @method DateInput date($name, $value = null, array $options = [])
- * @method DatetimeInput datetime($name, $value = null, array $options = [])
- * @method DatetimeLocalInput datetimeLocal($name, $value = null, array $options = [])
- * @method EmailInput email($name, $value = null, array $options = [])
- * @method HiddenInput hidden($name, $value = null, array $options = [])
- * @method MonthInput month($name, $value = null, array $options = [])
- * @method NumberInput number($name, $value = null, array $options = [])
- * @method RadioInput radio($name, $value = null, array $options = [])
- * @method RangeInput range($name, $value = null, array $options = [])
- * @method SearchInput search($name, $value = null, array $options = [])
- * @method SelectInput select($name, $value = null, array $options = [])
- * @method TelephoneInput tel($name, $value = null, array $options = [])
- * @method TextareaInput textarea($name, $value = null, array $options = [])
- * @method TextInput text($name, $value = null, array $options = [])
- * @method TimeInput time($name, $value = null, array $options = [])
- * @method UrlInput url($name, $value = null, array $options = [])
- * @method WeekInput week($name, $value = null, array $options = [])
- */
 class FormBuilder
 {
     /**
@@ -128,9 +103,81 @@ class FormBuilder
      * @param array $options
      * @return ButtonInput
      */
-    public function button($name, array $options = [])
+    public function button(string $name, array $options = []) : ButtonInput
     {
-        return $this->add('button', $name, null, $options);
+        return $this->add(ButtonInput::class, $name, null, $options);
+    }
+
+    /**
+     * Add new checkbox input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return CheckboxInput
+     */
+    public function checkbox(string $name, $value = null, array $options = []) : CheckboxInput
+    {
+        return $this->add(CheckboxInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new color input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return ColorInput
+     */
+    public function color(string $name, $value = null, array $options = []) : ColorInput
+    {
+        return $this->add(ColorInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new date input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return DateInput
+     */
+    public function date(string $name, $value = null, array $options = []) : DateInput
+    {
+        return $this->add(DateInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new datetime input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return DatetimeInput
+     */
+    public function datetime(string $name, $value = null, array $options = []) : DatetimeInput
+    {
+        return $this->add(DatetimeInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new datetime-local input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return DatetimeLocalInput
+     */
+    public function datetimeLocal(string $name, $value = null, array $options = []) : DatetimeLocalInput
+    {
+        return $this->add(DatetimeLocalInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new email input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return EmailInput
+     */
+    public function email(string $name, $value = null, array $options = []) : EmailInput
+    {
+        return $this->add(EmailInput::class, $name, $value, $options);
     }
 
     /**
@@ -139,9 +186,21 @@ class FormBuilder
      * @param array $options
      * @return FileInput
      */
-    public function file($name, array $options = [])
+    public function file(string $name, array $options = []) : FileInput
     {
-        return $this->add('file', $name, null, $options);
+        return $this->add(FileInput::class, $name, null, $options);
+    }
+
+    /**
+     * Add new hidden input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return HiddenInput
+     */
+    public function hidden(string $name, $value = null, array $options = []) : HiddenInput
+    {
+        return $this->add(HiddenInput::class, $name, $value, $options);
     }
 
     /**
@@ -150,20 +209,33 @@ class FormBuilder
      * @param array $options
      * @return ImageInput
      */
-    public function image($name, array $options = [])
+    public function image(string $name, array $options = []) : ImageInput
     {
-        return $this->add('image', $name, null, $options);
+        return $this->add(ImageInput::class, $name, null, $options);
     }
 
     /**
-     * Add new reset input
+     * Add new month input
      * @param string $name
+     * @param mixed $value
      * @param array $options
-     * @return ResetInput
+     * @return MonthInput
      */
-    public function reset($name, array $options = [])
+    public function month(string $name, $value = null, array $options = []) : MonthInput
     {
-        return $this->add('reset', $name, null, $options);
+        return $this->add(MonthInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new number input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return NumberInput
+     */
+    public function number(string $name, $value = null, array $options = []) : NumberInput
+    {
+        return $this->add(NumberInput::class, $name, $value, $options);
     }
 
     /**
@@ -172,9 +244,68 @@ class FormBuilder
      * @param array $options
      * @return PasswordInput
      */
-    public function password($name, array $options = [])
+    public function password($name, array $options = []) : PasswordInput
     {
-        return $this->add('password', $name, null, $options);
+        return $this->add(PasswordInput::class, $name, null, $options);
+    }
+
+    /**
+     * Add new radio input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return RadioInput
+     */
+    public function radio(string $name, $value = null, array $options = []) : RadioInput
+    {
+        return $this->add(RadioInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new range input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return RangeInput
+     */
+    public function range(string $name, $value = null, array $options = []) : RangeInput
+    {
+        return $this->add(RangeInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new reset input
+     * @param string $name
+     * @param array $options
+     * @return ResetInput
+     */
+    public function reset(string $name, array $options = []) : ResetInput
+    {
+        return $this->add(ResetInput::class, $name, null, $options);
+    }
+
+    /**
+     * Add new search input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return SearchInput
+     */
+    public function search(string $name, $value = null, array $options = []) : SearchInput
+    {
+        return $this->add(SearchInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new select input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return SelectInput
+     */
+    public function select(string $name, $value = null, array $options = []) : SelectInput
+    {
+        return $this->add(SelectInput::class, $name, $value, $options);
     }
 
     /**
@@ -183,9 +314,9 @@ class FormBuilder
      * @param array $options
      * @return SubmitInput
      */
-    public function submit($name, array $options = [])
+    public function submit($name, array $options = []) : SubmitInput
     {
-        $input = $this->add('submit', $name, null, $options);
+        $input = $this->add(SubmitInput::class, $name, null, $options);
 
         $input->model($this->model);
 
@@ -193,16 +324,88 @@ class FormBuilder
     }
 
     /**
+     * Add new tel input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return TelephoneInput
+     */
+    public function tel(string $name, $value = null, array $options = []) : TelephoneInput
+    {
+        return $this->add(TelephoneInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new textarea input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return TextareaInput
+     */
+    public function textarea(string $name, $value = null, array $options = []) : TextareaInput
+    {
+        return $this->add(TextareaInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new text input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return TextInput
+     */
+    public function text(string $name, $value = null, array $options = []) : TextInput
+    {
+        return $this->add(TextInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new time input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return TimeInput
+     */
+    public function time(string $name, $value = null, array $options = []) : TimeInput
+    {
+        return $this->add(TimeInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new url input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return UrlInput
+     */
+    public function url(string $name, $value = null, array $options = []) : UrlInput
+    {
+        return $this->add(UrlInput::class, $name, $value, $options);
+    }
+
+    /**
+     * Add new week input
+     * @param string $name
+     * @param mixed $value
+     * @param array $options
+     * @return WeekInput
+     */
+    public function week(string $name, $value = null, array $options = []) : WeekInput
+    {
+        return $this->add(WeekInput::class, $name, $value, $options);
+    }
+
+    /**
      * Adding new input
-     * @param string $type
+     * @param string $inputNamespace
      * @param string $name
      * @param mixed $value
      * @param array $options
      * @return Input
      */
-    public function add(string $type, string $name, $value = null, array $options = []) : Input
+    public function add(string $inputNamespace, string $name, $value = null, array $options = []) : Input
     {
-        $input = \FormInput::create($type, $name, $value, $options);
+        $input = \FormInput::create($inputNamespace, $name, $value, $options);
 
         $this->inputs[] = $input;
 
@@ -224,6 +427,7 @@ class FormBuilder
     /**
      * Get form attribute
      * @param string $name
+     * @param string $value
      * @return array|null
      */
     public function attribute(string $name = null, $value = null)
@@ -290,22 +494,6 @@ class FormBuilder
         return [
             'form' => $this,
         ];
-    }
-
-    /**
-     * @param string $name
-     * @param array $arguments
-     * @return mixed
-     */
-    public function __call($name, $arguments)
-    {
-        if (!in_array($name, Input::$availableTypes)) {
-            throw new MethodNotFoundException('Call to undefined method', static::class, $name, $arguments);
-        }
-
-        $arguments = array_prepend($arguments, $name);
-
-        return call_user_func_array([$this, 'add'], $arguments);
     }
 
     /**
