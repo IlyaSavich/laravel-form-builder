@@ -80,16 +80,15 @@ abstract class Form
     /**
      * Method implements logic for building form
      * @param FormBuilder $builder
-     * @return FormBuilder
      */
-    abstract protected function make(FormBuilder $builder): FormBuilder;
+    abstract protected function make(FormBuilder $builder);
 
     /**
      * Generating form
      * @param Model $model
      * @return Factory|View
      */
-    public function get(Model $model = null)
+    public function build(Model $model = null)
     {
         $this->model = $model;
 
@@ -110,13 +109,31 @@ abstract class Form
     }
 
     /**
+     * Set type
+     * @param string $type
+     * @return string|static
+     */
+    public function type(string $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
      * Set form vars
      * @param array $vars
+     * @param mixed $value
      * @return static
      */
-    public function vars(array $vars)
+    public function vars($vars, $value = null)
     {
-        $this->vars = array_merge($this->vars, $vars);
+        if (is_array($vars)) {
+            $this->vars = array_merge($this->vars, $vars);
+
+        } elseif (is_string($vars)) {
+            $this->vars[$vars] = $value;
+        }
 
         return $this;
     }
@@ -253,9 +270,9 @@ abstract class Form
     public function __call($name, $arguments)
     {
         if (in_array($name, $this->types)) {
-            $this->type = $name;
+            $this->type($name);
 
-            return call_user_func_array([$this, 'get'], $arguments);
+            return call_user_func_array([$this, 'build'], $arguments);
         }
 
         throw new MethodNotFoundException('Method not found in class ', static::class, $name, $arguments);

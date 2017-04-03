@@ -14,7 +14,6 @@ use Illuminate\View\View;
  * @property array $attributes
  * @property string $label
  * @property string $view
- * @property string $internalGroup
  * @property string $defaultView
  * @property array $groupAttributes
  * @property array $before
@@ -50,12 +49,6 @@ abstract class Input implements Inputable
      * @var string
      */
     protected $view;
-
-    /**
-     * Path to view inside group
-     * @var string
-     */
-    protected $internalGroup;
 
     /**
      * Path to view. This view will be rendered when view property will not specified
