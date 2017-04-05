@@ -8,15 +8,22 @@
       "email": "ilia.savich.97@gmail.com"
     }
   ],
-  "autoload": {
-    "psr-4": {
-      "Savich\\": "src/"
-    }
-  },
   "require": {
     "laravel/framework": "^5.3"
   },
   "require-dev": {
-    "phpspec/prophecy": "~1.0"
+    "phpspec/prophecy": "~1.0",
+    "phpunit/phpunit": "~5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Savich\\": "src/",
+      "Tests\\": "tests"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/TestCase.php"
+    ]
   }
 }

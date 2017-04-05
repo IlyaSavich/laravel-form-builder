@@ -16,6 +16,16 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 /**
  * Class Form
  * @package App\Services\FormBuilder
+ *
+ * @property FormBuilder $builder
+ * @property array $requests
+ * @property Request|FormRequest $request
+ * @property Model|\Eloquent $model
+ * @property array $types
+ * @property string $type
+ * @property array $vars
+ * @property array $routes
+ * @property array $methods
  * @method Factory|View create(Model $model = null)
  * @method Factory|View edit(Model $model = null)
  */
@@ -147,7 +157,7 @@ abstract class Form
     {
         $route = $this->routes[$this->type] ?? null;
 
-        if (!is_null($parameters)) {
+        if (!is_null($route) && !is_null($parameters)) {
             $route = [$route, $parameters];
         }
 
@@ -170,15 +180,17 @@ abstract class Form
      */
     public function model($property = null)
     {
-        if (!$this->model) {
-            return null;
-        }
-
         if (!$property) {
             return $this->model;
         }
 
-        return $this->model->$property;
+        if ($property instanceof Model) {
+            $this->model = $property;
+
+            return $this->model;
+        }
+
+        return $this->model ? $this->model->$property : null;
     }
 
     /**
