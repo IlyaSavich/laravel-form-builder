@@ -29,6 +29,12 @@ in app.php config
 ]
 ```
 
+### Publish config
+
+```
+php artisan vendor:publish --provider="Savich\FormBuilder\FormServiceProvider" --tag=config
+```
+
 # Usage
 
 To create new form first of all extending base `Form` class and overwrite method `make`.
@@ -203,7 +209,7 @@ class LoginController extends Controller
 {
     public function showLoginForm(LoginForm $form)
     {
-        $formHtml = $form->get();
+        $formHtml = $form->create();
         
         return view('login')->with('form', $formHtml);
     }

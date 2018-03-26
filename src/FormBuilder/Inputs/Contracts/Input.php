@@ -102,7 +102,7 @@ abstract class Input implements Inputable
     {
         $this->name = $name;
         $this->value = $value;
-        $this->attributes = $attributes;
+        $this->attributes = array_merge($this->defaultAttributes(), $attributes);
         $this->defaultView = config('form-builder.views.input');
         $this->withoutGroupView = config('form-builder.views.without-group-input');
     }
@@ -141,7 +141,7 @@ abstract class Input implements Inputable
      */
     public function attributes(array $attributes)
     {
-        $this->attributes = $attributes;
+        $this->attributes = array_merge($this->attributes, $attributes);
 
         return $this;
     }
@@ -322,6 +322,17 @@ abstract class Input implements Inputable
     {
         return [
             'class' => 'form-group',
+        ];
+    }
+
+    /**
+     * Array of default attributes for input
+     * @return array
+     */
+    protected function defaultAttributes()
+    {
+        return [
+            'class' => 'form-control',
         ];
     }
 
