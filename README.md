@@ -4,9 +4,6 @@ The form builder service for Laravel
 
 # Installation
 
-The package requires `laravelcollective/html` package.
-So first of all pass the installation steps for it.
-
 ### Require
 
 ```
