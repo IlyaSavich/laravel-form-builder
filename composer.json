@@ -30,7 +30,8 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Savich\\FormBuilder\\FormServiceProvider"
+        "Savich\\FormBuilder\\FormServiceProvider",
+        "Collective\\Html\\HtmlServiceProvider"
       ],
       "aliases": {
         "Form": "Collective\\Html\\FormFacade",
