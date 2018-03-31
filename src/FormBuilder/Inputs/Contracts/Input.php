@@ -147,6 +147,20 @@ abstract class Input implements Inputable
     }
 
     /**
+     * Set specific attribute
+     *
+     * @param string $name
+     * @param string $value
+     * @return Input
+     */
+    public function attribute(string $name, string $value): self
+    {
+        $this->attributes[$name] = $value;
+
+        return $this;
+    }
+
+    /**
      * Set view template
      * @param string $view
      * @return static
