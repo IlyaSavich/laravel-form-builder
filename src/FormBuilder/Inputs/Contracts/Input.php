@@ -105,6 +105,9 @@ abstract class Input implements Inputable
         $this->attributes = array_merge($this->defaultAttributes(), $attributes);
         $this->defaultView = config('form-builder.views.input');
         $this->withoutGroupView = config('form-builder.views.without-group-input');
+        $this->groupAttributes = $this->defaultGroupAttributes();
+
+        $this->addErrorClass();
     }
 
     /**
@@ -191,7 +194,7 @@ abstract class Input implements Inputable
      */
     public function groupAttributes(array $attributes)
     {
-        $this->groupAttributes = $attributes;
+        $this->groupAttributes = array_merge($this->groupAttributes, $attributes);
 
         return $this;
     }
@@ -299,11 +302,20 @@ abstract class Input implements Inputable
     {
         $attributes = [];
 
-        foreach ($this->groupAttributes ?? $this->defaultGroupAttributes() as $key => $value) {
+        foreach ($this->groupAttributes as $key => $value) {
             $attributes[] = "$key=\"$value\"";
         }
 
         return implode(' ', $attributes);
+    }
+
+    protected function addErrorClass()
+    {
+        if (!optional(session()->get('errors'))->has($this->name)) {
+            return;
+        }
+
+        $this->groupAttributes['class'] .= ' ' . config('form-builder.html.error.class');
     }
 
     /**

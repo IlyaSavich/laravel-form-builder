@@ -6,4 +6,9 @@ return [
         'form' => 'form-builder::form',
         'without-group-input' => 'form-builder::without-group-input',
     ],
+    'html' => [
+        'error' => [
+            'class' => 'error'
+        ],
+    ],
 ];

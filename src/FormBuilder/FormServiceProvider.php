@@ -30,25 +30,18 @@ class FormServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../../views', 'form-builder');
 
-        $this->publishConfig();
-        $this->publishViews();
+        $this->publish();
     }
 
     /**
-     * Specify publish config file
+     * Publish configs
      */
-    protected function publishConfig()
+    private function publish()
     {
         $this->publishes([
             __DIR__ . '/../../config/form-builder.php' => config_path('form-builder.php'),
         ], 'config');
-    }
 
-    /**
-     * Specify publish view files
-     */
-    protected function publishViews()
-    {
         $this->publishes([
             __DIR__ . '/../../views' => resource_path('views/vendor/form-builder'),
         ], 'views');
