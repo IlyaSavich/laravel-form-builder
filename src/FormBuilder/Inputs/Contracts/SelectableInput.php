@@ -1,6 +1,7 @@
 <?php
 
 namespace Savich\FormBuilder\Inputs\Contracts;
+use Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException;
 
 /**
  * Class SelectableInput
@@ -21,8 +22,12 @@ abstract class SelectableInput extends Input
      * @param array $options
      * @return static
      */
-    public function options(array $options)
+    public function options($options)
     {
+        if (!\is_array($options) && !$options instanceof \Traversable) {
+            throw new UnexpectedTypeException($options, 'array or Traversable');
+        }
+
         $this->list = $options;
 
         return $this;
