@@ -18,7 +18,7 @@ class RangeInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::selectRange($this->name, $this->begin(), $this->end(), $this->value, $this->attributes);
     }

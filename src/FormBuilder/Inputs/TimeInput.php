@@ -18,7 +18,7 @@ class TimeInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::time($this->name, $this->value, $this->attributes);
     }

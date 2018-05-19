@@ -18,7 +18,7 @@ class PasswordInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::password($this->name, $this->attributes);
     }

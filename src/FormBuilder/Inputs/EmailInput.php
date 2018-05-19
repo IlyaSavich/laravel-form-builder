@@ -18,7 +18,7 @@ class EmailInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::email($this->name, $this->value, $this->attributes);
     }

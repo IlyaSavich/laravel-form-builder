@@ -18,7 +18,7 @@ class ImageInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::image($this->url(), $this->name, $this->attributes);
     }

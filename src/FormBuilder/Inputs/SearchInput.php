@@ -18,7 +18,7 @@ class SearchInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::input('search', $this->name, $this->value, $this->attributes);
     }

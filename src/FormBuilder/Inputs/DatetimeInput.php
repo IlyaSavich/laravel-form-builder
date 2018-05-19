@@ -18,7 +18,7 @@ class DatetimeInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::datetime($this->name, $this->value, $this->attributes);
     }

@@ -18,7 +18,7 @@ class FileInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::file($this->name, $this->attributes);
     }

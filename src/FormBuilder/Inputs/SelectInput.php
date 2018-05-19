@@ -18,7 +18,7 @@ class SelectInput extends SelectableInput
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::select($this->name, $this->list, $this->value, $this->attributes);
     }

@@ -18,7 +18,7 @@ class ColorInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::color($this->name, $this->value, $this->attributes);
     }

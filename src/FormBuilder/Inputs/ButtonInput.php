@@ -18,7 +18,7 @@ class ButtonInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::button($this->name, $this->attributes);
     }

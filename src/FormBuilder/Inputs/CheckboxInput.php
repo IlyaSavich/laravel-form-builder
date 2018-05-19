@@ -18,7 +18,7 @@ class CheckboxInput extends CheckableInput
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::checkbox($this->name, $this->value, $this->checked, $this->attributes);
     }

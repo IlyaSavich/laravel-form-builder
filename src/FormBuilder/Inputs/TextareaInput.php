@@ -18,7 +18,7 @@ class TextareaInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::textarea($this->name, $this->value, $this->attributes);
     }

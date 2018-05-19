@@ -18,7 +18,7 @@ class WeekInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::input('week', $this->name, $this->value, $this->attributes);
     }

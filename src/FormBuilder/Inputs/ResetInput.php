@@ -18,7 +18,7 @@ class ResetInput extends Input
     /**
      * @return string
      */
-    public function input() : string
+    public function input()
     {
         return \Form::reset($this->name, $this->attributes);
     }
