@@ -16,10 +16,10 @@ interface Inputable
      * Specify inputs type there
      * @return string
      */
-    public function type() : string;
+    public function type(): string;
 
     /**
      * @return string
      */
-    public function input() : string;
+    public function input();
 }

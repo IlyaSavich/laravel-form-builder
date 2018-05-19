@@ -1,6 +1,7 @@
 <?php
 
 namespace Savich\FormBuilder\Inputs\Contracts;
+
 use Symfony\Component\HttpFoundation\File\Exception\UnexpectedTypeException;
 
 /**
