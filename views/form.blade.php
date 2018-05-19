@@ -1,3 +1,3 @@
 {!! $form->header() !!}
-{!! $form->generateGroups() !!}
+{!! $form->generateInputs() !!}
 {!! $form->close() !!}

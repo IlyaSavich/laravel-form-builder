@@ -2,9 +2,11 @@
 
 return [
     'views' => [
-        'input' => 'form-builder::input',
+        'input' => [
+            'inner' => 'form-builder::input.inner',
+            'outer' => 'form-builder::input.outer',
+        ],
         'form' => 'form-builder::form',
-        'without-group-input' => 'form-builder::without-group-input',
     ],
     'html' => [
         'error' => [

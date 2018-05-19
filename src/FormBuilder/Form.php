@@ -106,7 +106,7 @@ abstract class Form
         $this->make($this->builder);
         $this->formAttributes($this->builder);
 
-        return $this->builder->get();
+        return $this->builder->build();
     }
 
     /**

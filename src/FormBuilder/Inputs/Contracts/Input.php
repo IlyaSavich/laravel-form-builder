@@ -13,13 +13,12 @@ use Illuminate\View\View;
  * @property mixed $value
  * @property array $attributes
  * @property string $label
- * @property string $view
- * @property string $defaultView
- * @property array $groupAttributes
+ * @property string $outerView
+ * @property array $outerAttributes
  * @property array $before
  * @property array $after
- * @property bool $withoutGroup
- * @property string $withoutGroupView
+ * @property bool $onlyInner
+ * @property string $innerView
  * @property Model $model
  */
 abstract class Input implements Inputable
@@ -45,100 +44,92 @@ abstract class Input implements Inputable
     protected $label;
 
     /**
-     * Path to view group
+     * Path to outer view. This view defines rendering input wrapped with
+     *
      * @var string
      */
-    protected $view;
-
-    /**
-     * Path to view. This view will be rendered when view property will not specified
-     * @var string
-     */
-    protected $defaultView;
+    protected $outerView;
 
     /**
      * @var array
      */
-    protected $groupAttributes;
+    protected $outerAttributes;
 
     /**
-     * Inputs that must be prepended
-     * @var array
-     */
-    protected $before = [];
-
-    /**
-     * Inputs that must be appended
-     * @var array
-     */
-    protected $after = [];
-
-    /**
-     * Input will be no wrapped when true
+     * Will be rendered only inner part if true
+     *
      * @var bool
      */
-    protected $withoutGroup = false;
+    protected $onlyInner = false;
 
     /**
-     * Path to view when render without group wrapper
+     * Path to inner view
+     *
      * @var string
      */
-    protected $withoutGroupView;
+    protected $innerView;
 
     /**
      * Model for this input
+     *
      * @var Model
      */
     protected $model;
 
     /**
-     * Input constructor.
      * @param string $name
      * @param mixed $value
      * @param array $attributes
      * @throws \Exception
      */
-    public function __construct(string $name, $value = null, $attributes = [])
+    public function __construct(string $name, $value = null, array $attributes = [])
     {
         $this->name = $name;
         $this->value = $value;
         $this->attributes = array_merge($this->defaultAttributes(), $attributes);
-        $this->defaultView = config('form-builder.views.input');
-        $this->withoutGroupView = config('form-builder.views.without-group-input');
-        $this->groupAttributes = $this->defaultGroupAttributes();
+        $this->outerView = config('form-builder.views.input.outer');
+        $this->innerView = config('form-builder.views.input.inner');
+        $this->outerAttributes = $this->defaultOuterAttributes();
 
         $this->addErrorClass();
     }
 
     /**
      * Generate array of inputs
+     *
      * @param array $inputs
      * @return mixed
      */
     public static function generateArray(array $inputs)
     {
-        return array_reduce($inputs, function ($html, $input) {
-
-            if (!is_a($input, self::class)) {
-                $instanceType = is_object($input) ? get_class($input) : gettype($input);
-                throw new \Exception('Expected instance of ' . self::class . '. Got ' . $instanceType);
-            }
-
-            /** @var Input $input */
-            return $html . $input->generate();
-        });
+        return array_reduce($inputs, function (string $html, Input $input) {
+            return $html . $input->build();
+        }, '');
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|View
+     * Render outer view or inner if only inner flag was settled
+     *
+     * @return View
      */
-    public function generate()
+    public function build(): View
     {
-        return view($this->viewPath())->with($this->viewVars());
+        return view($this->onlyInner ? $this->innerView : $this->outerView)->with($this->viewVars());
     }
 
     /**
-     * Set input attributes
+     * Render inner view
+     *
+     * @return View
+     */
+    public function inner(): View
+    {
+        return view($this->innerView)->with($this->viewVars());
+    }
+
+    /**
+     * Add array of attributes, merge them with defined ones before
+     *
      * @param array $attributes
      * @return static|Input
      */
@@ -165,42 +156,46 @@ abstract class Input implements Inputable
 
     /**
      * Set view template
+     *
      * @param string $view
      * @return static
      */
     public function view(string $view)
     {
-        $this->view = $view;
+        $this->outerView = $view;
 
         return $this;
     }
 
     /**
-     * Set internal group
+     * Set view for inner part
+     *
      * @param string $view
      * @return static
      */
     public function internalView(string $view)
     {
-        $this->withoutGroupView = $view;
+        $this->innerView = $view;
 
         return $this;
     }
 
     /**
-     * Set attributes for group
+     * Set attributes for outer block
+     *
      * @param array $attributes
      * @return static
      */
-    public function groupAttributes(array $attributes)
+    public function outerAttributes(array $attributes)
     {
-        $this->groupAttributes = array_merge($this->groupAttributes, $attributes);
+        $this->outerAttributes = array_merge($this->outerAttributes, $attributes);
 
         return $this;
     }
 
     /**
      * Set label for input
+     *
      * @param string|null $text
      * @param array $options
      * @param bool $escape_html
@@ -214,47 +209,8 @@ abstract class Input implements Inputable
     }
 
     /**
-     * Add before input another one
-     * @param string $type
-     * @param string $name
-     * @param callable $callback
-     * @return $this
-     */
-    public function before(string $type, string $name, callable $callback = null)
-    {
-        $input = \FormInput::create($type, $name);
-
-        if ($callback) {
-            $callback($input, $this);
-        }
-
-        $this->before[] = $input;
-
-        return $this;
-    }
-
-    /**
-     * Add after input another one
-     * @param string $type
-     * @param string $name
-     * @param callable $callback
-     * @return $this
-     */
-    public function after(string $type, string $name, callable $callback = null)
-    {
-        $input = \FormInput::create($type, $name);
-
-        if ($callback) {
-            $callback($input, $this);
-        }
-
-        $this->after[] = $input;
-
-        return $this;
-    }
-
-    /**
      * Set model for input
+     *
      * @param Model $model
      * @return static
      */
@@ -266,71 +222,48 @@ abstract class Input implements Inputable
     }
 
     /**
-     * Set without group property. The input will be no wrapped when true
+     * Mark for input to render only inner part
+     *
      * @return static
      */
-    public function withoutGroup()
+    public function onlyInner()
     {
-        $this->withoutGroup = true;
+        $this->onlyInner = true;
 
         return $this;
     }
 
     /**
-     * Generating inputs before
-     * @return string
-     */
-    public function generateBefore()
-    {
-        return static::generateArray($this->before);
-    }
-
-    /**
-     * Generating inputs before
-     * @return string
-     */
-    public function generateAfter()
-    {
-        return static::generateArray($this->after);
-    }
-
-    /**
      * Array of attributes to string for html
+     *
      * @return string
      */
-    public function generateGroupAttributes()
+    public function generateOuterAttributes()
     {
         $attributes = [];
 
-        foreach ($this->groupAttributes as $key => $value) {
+        foreach ($this->outerAttributes as $key => $value) {
             $attributes[] = "$key=\"$value\"";
         }
 
         return implode(' ', $attributes);
     }
 
+    /**
+     * Add error class to outer attributes
+     */
     protected function addErrorClass()
     {
         if (!optional(session()->get('errors'))->has($this->name)) {
             return;
         }
 
-        $this->groupAttributes['class'] .= ' ' . config('form-builder.html.error.class');
-    }
-
-    /**
-     * Get path to view that should be rendered
-     * @return string
-     */
-    protected function viewPath()
-    {
-        return $this->withoutGroup ?
-            $this->withoutGroupView :
-            $this->view ?? $this->defaultView;
+        $this->outerAttributes['class'] .= ' ' . config('form-builder.html.error.class');
     }
 
     /**
      * Specify vars that will pass to view
+     *
      * @return array
      */
     protected function viewVars()
@@ -342,24 +275,22 @@ abstract class Input implements Inputable
 
     /**
      * Array of default group attributes
+     *
      * @return array
      */
-    protected function defaultGroupAttributes()
+    protected function defaultOuterAttributes()
     {
-        return [
-            'class' => 'form-group',
-        ];
+        return ['class' => 'form-group'];
     }
 
     /**
      * Array of default attributes for input
+     *
      * @return array
      */
     protected function defaultAttributes()
     {
-        return [
-            'class' => 'form-control',
-        ];
+        return ['class' => 'form-control'];
     }
 
     /**
@@ -373,5 +304,15 @@ abstract class Input implements Inputable
         }
 
         return null;
+    }
+
+    /**
+     * Add ability generate view on string cast
+     *
+     * @return \Illuminate\Contracts\View\Factory|View
+     */
+    public function __toString()
+    {
+        return $this->build();
     }
 }

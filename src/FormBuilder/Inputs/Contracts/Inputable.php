@@ -2,7 +2,7 @@
 
 namespace Savich\FormBuilder\Inputs\Contracts;
 
-use Illuminate\Contracts\View\View;
+use Illuminate\View\View;
 
 interface Inputable
 {
@@ -10,7 +10,7 @@ interface Inputable
      * Generating input
      * @return View
      */
-    public function generate();
+    public function build(): View;
 
     /**
      * Specify inputs type there
