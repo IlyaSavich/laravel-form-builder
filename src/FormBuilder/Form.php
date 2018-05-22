@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Prophecy\Exception\Doubler\MethodNotFoundException;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 /**
  * Class Form
@@ -85,6 +84,7 @@ abstract class Form
     public function __construct(FormBuilder $builder = null)
     {
         $this->builder = $builder ?? app(FormBuilder::class);
+        $this->make($this->builder);
     }
 
     /**
@@ -103,7 +103,6 @@ abstract class Form
         $this->model = $model;
 
         $this->builder->model($this->model);
-        $this->make($this->builder);
         $this->formAttributes($this->builder);
 
         return $this->builder->build();
@@ -142,6 +141,10 @@ abstract class Form
             $this->vars = array_merge($this->vars, $vars);
 
         } elseif (is_string($vars)) {
+            if (!$value) {
+                return $this->vars[$vars] ?? null;
+            }
+
             $this->vars[$vars] = $value;
         }
 
@@ -296,27 +299,6 @@ abstract class Form
      */
     public function __get($name)
     {
-        if (property_exists($this, $name)) {
-            return $this->$name;
-
-        } elseif (array_key_exists($name, $this->vars)) {
-            return $this->vars[$name];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $name
-     * @param $value
-     * @throws FatalThrowableError
-     */
-    public function __set($name, $value)
-    {
-        if (property_exists($this, $name)) {
-            throw new FatalThrowableError(new \Exception('Cannot access protected property ' . static::class . '::$' . $name));
-        }
-
-        $this->vars[$name] = $value;
+        return $this->builder->$name;
     }
 }
