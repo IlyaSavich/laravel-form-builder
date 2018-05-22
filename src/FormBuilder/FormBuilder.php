@@ -198,6 +198,6 @@ class FormBuilder
      */
     public function __toString()
     {
-        return $this->build();
+        return (string) $this->build();
     }
 }

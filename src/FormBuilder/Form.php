@@ -84,7 +84,6 @@ abstract class Form
     public function __construct(FormBuilder $builder = null)
     {
         $this->builder = $builder ?? app(FormBuilder::class);
-        $this->make($this->builder);
     }
 
     /**
@@ -96,16 +95,14 @@ abstract class Form
     /**
      * Generating form
      * @param Model $model
-     * @return Factory|View
      */
     public function build(Model $model = null)
     {
         $this->model = $model;
 
         $this->builder->model($this->model);
+        $this->make($this->builder);
         $this->formAttributes($this->builder);
-
-        return $this->builder->build();
     }
 
     /**
@@ -278,19 +275,18 @@ abstract class Form
     /**
      * Check that called method exists in available get() method types.
      * When true overwrite default type by called method name and call standard get method
+     *
      * @param string $name
      * @param array $arguments
-     * @return mixed
      */
     public function __call($name, $arguments)
     {
-        if (in_array($name, $this->types)) {
-            $this->type($name);
-
-            return call_user_func_array([$this, 'build'], $arguments);
+        if (!in_array($name, $this->types)) {
+            throw new MethodNotFoundException('Method not found in class ', static::class, $name, $arguments);
         }
 
-        throw new MethodNotFoundException('Method not found in class ', static::class, $name, $arguments);
+        $this->type($name);
+        call_user_func_array([$this, 'build'], $arguments);
     }
 
     /**
@@ -300,5 +296,10 @@ abstract class Form
     public function __get($name)
     {
         return $this->builder->$name;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->builder->build();
     }
 }
