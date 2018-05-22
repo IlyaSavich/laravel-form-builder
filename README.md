@@ -19,11 +19,6 @@ in app.php config
     // ...
     Savich\FormBuilder\FormServiceProvider::class,
 ],
-
-'aliases' => [
-    // ...
-    'FormInput' => Savich\FormBuilder\Inputs\Factory\FormInputFacade::class,
-]
 ```
 
 ### Publish config
