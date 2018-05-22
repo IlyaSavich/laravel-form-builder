@@ -309,10 +309,10 @@ abstract class Input implements Inputable
     /**
      * Add ability generate view on string cast
      *
-     * @return \Illuminate\Contracts\View\Factory|View
+     * @return string
      */
     public function __toString()
     {
-        return $this->build();
+        return (string) $this->build();
     }
 }
