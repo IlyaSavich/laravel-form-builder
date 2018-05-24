@@ -87,6 +87,7 @@ abstract class Form
     public function __construct(FormBuilder $builder = null)
     {
         $this->builder = $builder ?? app(FormBuilder::class);
+        $this->formId = snake_case(static::class);
     }
 
     /**
@@ -262,6 +263,8 @@ abstract class Form
      */
     protected function submit(string $value, array $options = []): Input
     {
+        $options['form'] = $options['form'] ?? $this->formId;
+
         return $this->builder->add(SubmitInput::class, 'submit', $value, $options);
     }
 
@@ -272,6 +275,8 @@ abstract class Form
      */
     protected function formAttributes(FormBuilder $builder)
     {
+        $builder->attribute('id', $builder->attribute('id') ?: $this->formId);
+
         return $this->checkRoutes($builder)
             ->checkMethod($builder);
     }
