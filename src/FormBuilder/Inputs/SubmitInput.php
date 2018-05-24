@@ -20,6 +20,6 @@ class SubmitInput extends Input
      */
     public function input()
     {
-        return \Form::submit($this->name, $this->attributes);
+        return \Form::submit($this->value, $this->attributes);
     }
 }

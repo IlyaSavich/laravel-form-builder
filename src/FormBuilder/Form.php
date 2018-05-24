@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\View;
 use Prophecy\Exception\Doubler\MethodNotFoundException;
+use Savich\FormBuilder\Inputs\Contracts\Input;
+use Savich\FormBuilder\Inputs\SubmitInput;
 
 /**
  * Class Form
@@ -227,6 +230,39 @@ abstract class Form
         if (is_a($this->request, FormRequest::class)) {
             $this->request->setContainer($app)->setRedirector($app->make(Redirector::class));
         }
+    }
+
+    /**
+     * Get open form tag
+     *
+     * @return HtmlString
+     */
+    public function open()
+    {
+        return $this->builder->header();
+    }
+
+    /**
+     * Get close form tag
+     *
+     * @return string
+     */
+    public function close()
+    {
+        return $this->builder->close();
+    }
+
+    /**
+     * Get submit input
+     *
+     * @param string $value
+     * @param array $options
+     * @return Inputs\Contracts\Input
+     * @throws \Exception
+     */
+    protected function submit(string $value, array $options = []): Input
+    {
+        return $this->builder->add(SubmitInput::class, 'submit', $value, $options);
     }
 
     /**
