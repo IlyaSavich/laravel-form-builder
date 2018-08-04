@@ -147,14 +147,14 @@ abstract class Form
 
     /**
      * Get route for type
-     * @param array $parameters
-     * @return string
+     * @param mixed $parameters
+     * @return string|array
      */
-    public function route(array $parameters = []): string
+    public function route($parameters = null)
     {
         $route = $this->routes[$this->type] ?? null;
 
-        if (!is_null($route) && !empty($parameters)) {
+        if (!is_null($route) && !is_null($parameters)) {
             $route = [$route, $parameters];
         }
 
