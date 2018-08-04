@@ -16,23 +16,16 @@ use Savich\FormBuilder\Inputs\Contracts\Input;
 use Savich\FormBuilder\Inputs\SubmitInput;
 
 /**
- * Class Form
- * @package App\Services\FormBuilder
- *
- * @property FormBuilder $builder
- * @property array $requests
- * @property Request|FormRequest $request
- * @property Model|\Eloquent $model
- * @property array $types
- * @property string $type
- * @property array $vars
- * @property array $routes
- * @property array $methods
  * @method Factory|View create(Model $model = null)
  * @method Factory|View edit(Model $model = null)
  */
 abstract class Form
 {
+    /**
+     * @var string
+     */
+    protected $formId;
+
     /**
      * @var FormBuilder
      */
@@ -84,9 +77,9 @@ abstract class Form
      */
     protected $methods = ['create' => 'POST', 'edit' => 'PUT'];
 
-    public function __construct(FormBuilder $builder = null)
+    public function __construct(FormBuilder $builder)
     {
-        $this->builder = $builder ?? app(FormBuilder::class);
+        $this->builder = $builder;
         $this->formId = snake_case(static::class);
     }
 
@@ -94,13 +87,13 @@ abstract class Form
      * Method implements logic for building form
      * @param FormBuilder $builder
      */
-    abstract protected function make(FormBuilder $builder);
+    abstract protected function make(FormBuilder $builder): void;
 
     /**
      * Generating form
      * @param Model $model
      */
-    public function build(Model $model = null)
+    public function build(Model $model = null): void
     {
         $this->model = $model;
 
@@ -113,7 +106,7 @@ abstract class Form
      * Get resolved request
      * @return FormRequest|Request
      */
-    public function request()
+    public function request(): Request
     {
         return $this->request;
     }
@@ -121,9 +114,9 @@ abstract class Form
     /**
      * Set type
      * @param string $type
-     * @return string|static
+     * @return static
      */
-    public function type(string $type)
+    public function type(string $type): self
     {
         $this->type = $type;
 
@@ -136,7 +129,7 @@ abstract class Form
      * @param mixed $value
      * @return static
      */
-    public function vars($vars, $value = null)
+    public function vars($vars, $value = null): self
     {
         if (is_array($vars)) {
             $this->vars = array_merge($this->vars, $vars);
@@ -154,14 +147,14 @@ abstract class Form
 
     /**
      * Get route for type
-     * @param array|mixed $parameters
+     * @param array $parameters
      * @return string
      */
-    public function route($parameters = null)
+    public function route(array $parameters = []): string
     {
         $route = $this->routes[$this->type] ?? null;
 
-        if (!is_null($route) && !is_null($parameters)) {
+        if (!is_null($route) && !empty($parameters)) {
             $route = [$route, $parameters];
         }
 
@@ -170,16 +163,16 @@ abstract class Form
 
     /**
      * Get method for type
-     * @return string
+     * @return string|null
      */
-    public function method()
+    public function method(): ?string
     {
         return $this->methods[$this->type] ?? null;
     }
 
     /**
      * Get model or it property
-     * @param string $property
+     * @param Model|string $property
      * @return Model|mixed
      */
     public function model($property = null)
@@ -238,7 +231,7 @@ abstract class Form
      *
      * @return HtmlString
      */
-    public function open()
+    public function open(): HtmlString
     {
         return $this->builder->header();
     }
@@ -246,9 +239,9 @@ abstract class Form
     /**
      * Get close form tag
      *
-     * @return string
+     * @return HtmlString
      */
-    public function close()
+    public function close(): HtmlString
     {
         return $this->builder->close();
     }
@@ -271,9 +264,9 @@ abstract class Form
     /**
      * Apply some changes for form attributes. Check routes
      * @param FormBuilder $builder
-     * @return Form
+     * @return static
      */
-    protected function formAttributes(FormBuilder $builder)
+    protected function formAttributes(FormBuilder $builder): self
     {
         $builder->attribute('id', $builder->attribute('id') ?: $this->formId);
 
@@ -286,7 +279,7 @@ abstract class Form
      * @param FormBuilder $builder
      * @return static
      */
-    protected function checkRoutes(FormBuilder $builder)
+    protected function checkRoutes(FormBuilder $builder): self
     {
         $route = $builder->attribute('route');
 
@@ -302,7 +295,7 @@ abstract class Form
      * @param FormBuilder $builder
      * @return static
      */
-    protected function checkMethod(FormBuilder $builder)
+    protected function checkMethod(FormBuilder $builder): self
     {
         $method = $builder->attribute('method');
 
@@ -311,6 +304,18 @@ abstract class Form
         }
 
         return $this;
+    }
+
+    /**
+     * Get input from builder by it's name
+     *
+     * @param string $inputName
+     *
+     * @return Input
+     */
+    public function input(string $inputName): Input
+    {
+        return $this->builder->get($inputName);
     }
 
     /**
@@ -331,15 +336,17 @@ abstract class Form
     }
 
     /**
+     * Get input from builder by it's name as property
+     *
      * @param string $name
-     * @return mixed
+     * @return Input
      */
-    public function __get($name)
+    public function __get($name): Input
     {
-        return $this->builder->$name;
+        return $this->input($name);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->builder->build();
     }

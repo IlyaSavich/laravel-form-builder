@@ -167,7 +167,7 @@ class FormBuilder
 
     /**
      * Generating form header with attributes
-     * @return string
+     * @return HtmlString
      */
     public function close()
     {

@@ -98,9 +98,9 @@ abstract class Input implements Inputable
      * Generate array of inputs
      *
      * @param array $inputs
-     * @return mixed
+     * @return string
      */
-    public static function generateArray(array $inputs)
+    public static function generateArray(array $inputs): string
     {
         return array_reduce($inputs, function (string $html, Input $input) {
             return $html . $input->build();
@@ -131,9 +131,9 @@ abstract class Input implements Inputable
      * Add array of attributes, merge them with defined ones before
      *
      * @param array $attributes
-     * @return static|Input
+     * @return static
      */
-    public function attributes(array $attributes)
+    public function attributes(array $attributes): self
     {
         $this->attributes = array_merge($this->attributes, $attributes);
 
@@ -145,7 +145,7 @@ abstract class Input implements Inputable
      *
      * @param string $name
      * @param string $value
-     * @return Input
+     * @return static
      */
     public function attribute(string $name, string $value): self
     {
@@ -160,7 +160,7 @@ abstract class Input implements Inputable
      * @param string $view
      * @return static
      */
-    public function view(string $view)
+    public function view(string $view): self
     {
         $this->outerView = $view;
 
@@ -173,7 +173,7 @@ abstract class Input implements Inputable
      * @param string $view
      * @return static
      */
-    public function internalView(string $view)
+    public function internalView(string $view): self
     {
         $this->innerView = $view;
 
@@ -186,7 +186,7 @@ abstract class Input implements Inputable
      * @param array $attributes
      * @return static
      */
-    public function outerAttributes(array $attributes)
+    public function outerAttributes(array $attributes): self
     {
         $this->outerAttributes = array_merge($this->outerAttributes, $attributes);
 
@@ -201,7 +201,7 @@ abstract class Input implements Inputable
      * @param bool $escape_html
      * @return static
      */
-    public function label($text = null, array $options = [], bool $escape_html = true)
+    public function label($text = null, array $options = [], bool $escape_html = true): self
     {
         $this->label = \Form::label($this->name, $text, $options, $escape_html);
 
@@ -214,7 +214,7 @@ abstract class Input implements Inputable
      * @param Model $model
      * @return static
      */
-    public function model(Model $model = null)
+    public function model(Model $model = null): self
     {
         $this->model = $model;
 
@@ -226,7 +226,7 @@ abstract class Input implements Inputable
      *
      * @return static
      */
-    public function onlyInner()
+    public function onlyInner(): self
     {
         $this->onlyInner = true;
 
@@ -238,7 +238,7 @@ abstract class Input implements Inputable
      *
      * @return string
      */
-    public function generateOuterAttributes()
+    public function generateOuterAttributes(): string
     {
         $attributes = [];
 
@@ -252,7 +252,7 @@ abstract class Input implements Inputable
     /**
      * Add error class to outer attributes
      */
-    protected function addErrorClass()
+    protected function addErrorClass(): void
     {
         if (!optional(session()->get('errors'))->has($this->name)) {
             return;
@@ -266,11 +266,9 @@ abstract class Input implements Inputable
      *
      * @return array
      */
-    protected function viewVars()
+    protected function viewVars(): array
     {
-        return [
-            'input' => $this,
-        ];
+        return ['input' => $this];
     }
 
     /**
@@ -278,7 +276,7 @@ abstract class Input implements Inputable
      *
      * @return array
      */
-    protected function defaultOuterAttributes()
+    protected function defaultOuterAttributes(): array
     {
         return ['class' => 'form-group'];
     }
@@ -288,7 +286,7 @@ abstract class Input implements Inputable
      *
      * @return array
      */
-    protected function defaultAttributes()
+    protected function defaultAttributes(): array
     {
         return ['class' => 'form-control'];
     }
@@ -311,7 +309,7 @@ abstract class Input implements Inputable
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->build();
     }
